@@ -26,7 +26,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         inputLabel.text? = emptyText
         formatter.minimumIntegerDigits = 1
-    
+        
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -228,5 +228,11 @@ class ViewController: UIViewController {
         printNumber(fracCnt: calc.result.truncatingRemainder(dividingBy: 1.0) < 0.00001 ? 0 : min(str.distance(from: point!, to: str.endIndex) - 1, 5) , calc.result)
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "history" {
+            let target = segue.destination as? TableViewController
+            //target?.history = history
+        }
+    }
 }
 
