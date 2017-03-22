@@ -10,6 +10,7 @@ import UIKit
 
 class TableViewController: UITableViewController {
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -18,8 +19,25 @@ class TableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        // Unarchive from file
+        if let app = UIApplication.shared.delegate as? AppDelegate {
+            
+            if let storedNotes = app.unarchiveStorage(atPath: nil) as? [Note] {
+                print("4444")
+                app.storage = storedNotes as NSCoding
+            }
+        }
+
     }
 
+    public func insertNewObject(_ sender: Any, _ text: String) {
+        print("111")
+        let indexPath = IndexPath(row: 0, section: 0)
+        self.tableView.insertRows(at: [indexPath], with: .automatic)
+    }
+
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -29,21 +47,31 @@ class TableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 2
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 3
+        //notes.insert(Note(content: "123"), at: 0)
+        //print(notes.count)
+        return notes.count
     }
 
+    
+    override func viewWillAppear(_ animated: Bool) {
+        //self.clearsSelectionOnViewWillAppear = self.splitViewController!.isCollapsed
+        super.viewWillAppear(animated)
+    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
         // Configure the cell...
-        cell.textLabel?.text = indexPath.row.description
+        let note = notes[indexPath.row]
+        cell.textLabel!.text = note.content
+        cell.backgroundColor = note.color
         return cell
+
     }
  
 

@@ -22,6 +22,15 @@ class ViewController: UIViewController {
     
     let formatter = NumberFormatter()
     
+    var notes = [Note]() {
+        didSet {
+            // Update reference
+            if let app = UIApplication.shared.delegate as? AppDelegate {
+                app.storage = notes as NSCoding
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         inputLabel.text? = emptyText
@@ -30,6 +39,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
     }
 
+    
     @IBAction func buttonTouch(_ sender: UIButton) {
         print("12")
         guard let content = sender.titleLabel?.text else {
@@ -151,6 +161,8 @@ class ViewController: UIViewController {
             }
             
             printCalculatorResult()
+            let note = Note(content: inputLabel.text!, color: UIColor.green)
+            self.notes.insert(note, at: 0)
             madeOperations.0 = false
             madeOperations.1 = true
             
@@ -230,8 +242,13 @@ class ViewController: UIViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "history" {
-            let target = segue.destination as? TableViewController
-            //target?.history = history
+            if let target = segue.destination as? TableViewController {
+                target.insertNewObject(target, "1")
+            } else {
+                print("123")
+            }
+            
+            //target?. = history
         }
     }
 }

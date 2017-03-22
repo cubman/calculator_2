@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F031B411E82A7A50071500A /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F031B401E82A7A50071500A /* Note.swift */; };
 		3F4214361E8158CB00E16102 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4214351E8158CB00E16102 /* AppDelegate.swift */; };
 		3F4214381E8158CB00E16102 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4214371E8158CB00E16102 /* ViewController.swift */; };
 		3F42143B1E8158CC00E16102 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3F4214391E8158CC00E16102 /* Main.storyboard */; };
@@ -39,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3F031B401E82A7A50071500A /* Note.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		3F4214321E8158CB00E16102 /* calculator_2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = calculator_2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F4214351E8158CB00E16102 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3F4214371E8158CB00E16102 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				3FA9452F1E816D9800E24257 /* operation_type.swift */,
 				3FA945311E816DBA00E24257 /* exceptions.swift */,
 				3F663FD91E817A8300807CF0 /* TableViewController.swift */,
+				3F031B401E82A7A50071500A /* Note.swift */,
 			);
 			path = calculator_2;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 				3F4214381E8158CB00E16102 /* ViewController.swift in Sources */,
 				3F663FDA1E817A8300807CF0 /* TableViewController.swift in Sources */,
 				3F42143E1E8158CC00E16102 /* calculator_2.xcdatamodeld in Sources */,
+				3F031B411E82A7A50071500A /* Note.swift in Sources */,
 				3F4214361E8158CB00E16102 /* AppDelegate.swift in Sources */,
 				3FA945301E816D9800E24257 /* operation_type.swift in Sources */,
 				3FA9452E1E816D7000E24257 /* Calculator.swift in Sources */,

@@ -10,16 +10,43 @@ import UIKit
 import CoreData
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
 
+    var storage: NSCoding?
+    var filePath: String!
+    
+    
 
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        //let splitViewController = self.window!.rootViewController as! UISplitViewController
+       // splitViewController.delegate = self
+        
+        //let navigationController = splitViewController.viewControllers.last! as! UINavigationController
+       // navigationController.topViewController!.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem
+        
         return true
     }
 
+    func unarchiveStorage(atPath pathToStorage: String?) -> NSCoding? {
+        if pathToStorage != nil {
+            filePath = pathToStorage
+        } else {
+            let lib = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first!
+            filePath = lib.appendingPathComponent("storage.str").path
+            UserDefaults.standard.set(filePath, forKey: "filePath")
+        }
+        // Unarchiving storage
+        if FileManager.default.fileExists(atPath: filePath) {
+            return NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as? NSCoding
+        }
+        return nil
+    }
+
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
@@ -28,6 +55,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        if let archivingStorage = storage {
+            NSKeyedArchiver.archiveRootObject(archivingStorage, toFile: filePath)
+        } else {
+            print("nothing to archive")
+        }
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -88,6 +120,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+    
+    
 
 }
 
