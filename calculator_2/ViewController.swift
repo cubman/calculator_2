@@ -19,6 +19,7 @@ class ViewController: UIViewController {
     var calc : Calculator = Calculator()
     var opType : OperationType? = nil
     var madeOperations: (Bool, Bool) = (false, false)// entered | pressed = | unary
+    var result_string: String = ""
     
     let formatter = NumberFormatter()
     
@@ -37,8 +38,22 @@ class ViewController: UIViewController {
         formatter.minimumIntegerDigits = 1
         
         // Do any additional setup after loading the view, typically from a nib.
+        if let app = UIApplication.shared.delegate as? AppDelegate {
+            
+            if let storedNotes = app.unarchiveStorage(atPath: nil) as? [Note] {
+            //     print("4444")
+                notes = storedNotes
+               }
+            app.storage = notes as NSCoding
+        }
+
     }
 
+    func insertNewObject(_ text: String) {
+        print("111")
+        let note = Note(content: text, result: inputLabel.text!, color: UIColor.green)
+        self.notes.insert(note, at: 0)
+    }
     
     @IBAction func buttonTouch(_ sender: UIButton) {
         print("12")
@@ -86,7 +101,7 @@ class ViewController: UIViewController {
                 inputLabel.text = inputLabel.text! + formatter.decimalSeparator
             }
             
-        case "-", "+", "*", ":":
+        case "-", "+", "*", "÷":
             switch content {
             case "-":
                 opType = .minus
@@ -94,11 +109,13 @@ class ViewController: UIViewController {
                 opType = .plus
             case "*":
                 opType = .mod
-            case ":":
+            case "÷":
                 opType = .div
             default:
                 return
             }
+            
+            
             
             madeOperations.1 = false
             hasDecimalPoint = false
@@ -109,10 +126,12 @@ class ViewController: UIViewController {
             
             if !calc.wasActivated {
                 calc.result = inputValue
+                result_string = inputLabel.text!
                 print("++", calc.result)
             } else {
                 makeCalculation(opType!)
             }
+        
             
             inputLabel.text = emptyText
             inputValue = 0
@@ -127,6 +146,7 @@ class ViewController: UIViewController {
             if !madeOperations.1 && !calc.wasActivated
             {
                 calc.result = inputValue
+                result_string = inputLabel.text!
             }
             
             switch content {
@@ -138,10 +158,10 @@ class ViewController: UIViewController {
                 opType = .sin
             case "cos":
                 opType = .cos
-                
             default:
                 return
             }
+            
             
             calc.wasActivated = false
             madeOperations.1 = true
@@ -152,17 +172,17 @@ class ViewController: UIViewController {
             inputValue = 0
             precision = 0
             
-        case "=" :
-            
+        case "=":
             if madeOperations.0 {
                 if let op = opType {
                     makeCalculation(op)
+
+                    insertNewObject(result_string)
+                    result_string = inputLabel.text!
                 }
             }
             
             printCalculatorResult()
-            let note = Note(content: inputLabel.text!, color: UIColor.green)
-            self.notes.insert(note, at: 0)
             madeOperations.0 = false
             madeOperations.1 = true
             
@@ -189,21 +209,34 @@ class ViewController: UIViewController {
             switch op {
             case .plus:
                 try calc += inputValue
+                result_string = result_string + "+" + inputLabel.text!
             case .minus:
                 calc -= inputValue
+                result_string = result_string + "-" + inputLabel.text!
             case .mod:
                 calc *= inputValue
+                result_string = "(" + result_string + "*" + inputLabel.text! + ")"
             case .div:
                 try calc /= inputValue
+                result_string = "(" + result_string + "/" + inputLabel.text! + ")"
             case .sqrt :
                 try √calc
+                result_string = "√(" + result_string + ")"
+                insertNewObject(result_string)
             case .plusMinus:
                 ±calc
+                result_string = "(-1)*(" + result_string + ")"
+                insertNewObject(result_string)
             case .sin:
                 sin(calc)
+                result_string = "sin(" + result_string + ")"
+                insertNewObject(result_string)
             case .cos:
                 cos(calc)
+                result_string = "cos(" + result_string + ")"
+                insertNewObject(result_string)
             }
+            
         } catch MyErrors.divideByZero(let errorMessage) {
             let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
@@ -237,13 +270,13 @@ class ViewController: UIViewController {
     func printCalculatorResult() {
         let str = String(calc.result)
         let point = str.rangeOfCharacter(from: ["."])?.lowerBound
-        printNumber(fracCnt: calc.result.truncatingRemainder(dividingBy: 1.0) < 0.00001 ? 0 : min(str.distance(from: point!, to: str.endIndex) - 1, 5) , calc.result)
+        printNumber(fracCnt: abs(calc.result.truncatingRemainder(dividingBy: 1.0)) < 0.00001 ? 0 : min(str.distance(from: point!, to: str.endIndex) - 1, 5) , calc.result)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "history" {
             if let target = segue.destination as? TableViewController {
-                target.insertNewObject(target, "1")
+                target.load(notes, c: self)
             } else {
                 print("123")
             }

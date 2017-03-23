@@ -9,8 +9,10 @@
 import UIKit
 
 class TableViewController: UITableViewController {
-
     
+    weak var calc: ViewController?
+    
+    @IBOutlet weak var clear_buttom: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -21,22 +23,16 @@ class TableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
         // Unarchive from file
-        if let app = UIApplication.shared.delegate as? AppDelegate {
-            
-            if let storedNotes = app.unarchiveStorage(atPath: nil) as? [Note] {
-                print("4444")
-                app.storage = storedNotes as NSCoding
             }
-        }
 
+    public func load(_ not: [Note], c : ViewController) {
+        calc = c
     }
-
-    public func insertNewObject(_ sender: Any, _ text: String) {
-        print("111")
-        let indexPath = IndexPath(row: 0, section: 0)
-        self.tableView.insertRows(at: [indexPath], with: .automatic)
+    
+    @IBAction func pushedClear() {
+        calc?.notes = [Note]()
+        self.tableView.reloadData()
     }
-
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -52,14 +48,12 @@ class TableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        //notes.insert(Note(content: "123"), at: 0)
-        //print(notes.count)
-        return notes.count
+        return calc!.notes.count
     }
 
     
     override func viewWillAppear(_ animated: Bool) {
-        //self.clearsSelectionOnViewWillAppear = self.splitViewController!.isCollapsed
+
         super.viewWillAppear(animated)
     }
     
@@ -67,7 +61,8 @@ class TableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
         // Configure the cell...
-        let note = notes[indexPath.row]
+        let note = calc!.notes[indexPath.row]
+        cell.detailTextLabel!.text = note.res
         cell.textLabel!.text = note.content
         cell.backgroundColor = note.color
         return cell
